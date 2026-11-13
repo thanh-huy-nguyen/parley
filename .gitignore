@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Weights and outputs stay out of the repository
+*.pt
+*.npz
+*.wav
+*.flac
+toy_run.json
+bench_*.json
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store

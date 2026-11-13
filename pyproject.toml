@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parley"
+dynamic = ["version"]
+description = "Speech-directed segmentation mask editor, with an evaluation kit for conversational editors."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Thanh-Huy Nguyen" }, { name = "Ulas Bagci" }]
+keywords = ["interactive segmentation", "speech", "medical imaging", "human-in-the-loop", "evaluation"]
+classifiers = [
+  "Programming Language :: Python :: 3.11",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Image Processing",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = [
+  "torch==2.14.1",
+  "torchaudio==2.11.0",
+  "torchvision==0.29.1",
+  "transformers==5.6.0",
+  "tokenizers==0.22.2",
+  "huggingface_hub==1.33.0",
+  "safetensors==0.8.0",
+  "accelerate==1.11.0",
+  "numpy==2.4.6",
+  "scipy==1.17.1",
+  "opencv-python-headless==5.0.0.93",
+  "pillow==11.3.0",
+  "soundfile==0.14.0",
+]
+
+[project.optional-dependencies]
+demo = ["gradio==5.50.0", "gradio_client==1.14.0", "matplotlib==3.11.2"]
+test = ["pytest==9.1.1"]
+
+[project.urls]
+Homepage = "https://github.com/thanh-huy-nguyen/parley"
+Issues = "https://github.com/thanh-huy-nguyen/parley/issues"
+
+[project.scripts]
+parley = "parley.cli:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "parley.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+parley = ["weights_manifest.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "weights: needs the released checkpoints and the frozen Hugging Face models",
+  "gpu: needs a GPU",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]

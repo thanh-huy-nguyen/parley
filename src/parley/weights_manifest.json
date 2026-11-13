@@ -1,0 +1,13 @@
+{
+ "note": "SHA-256 of the released editor checkpoints and the commits of the frozen Hugging Face models.",
+ "weights": {
+  "0": {"file": "parley-editor-s0.pt", "sha256": "c5cf3e70f34faeb635f94458ea3fbc25658c4bd3e8858dab43e5d3d70bff4ab2"},
+  "1": {"file": "parley-editor-s1.pt", "sha256": "72d3b2dee645e1df86c23b362dc2823830da9828e35e64ab6ea025b648ec825a"},
+  "2": {"file": "parley-editor-s2.pt", "sha256": "fa736d610457da71adf0b3ca9885d33ae5047d608203f2f27cd1dedc74cd0e4e"}
+ },
+ "hf": {
+  "facebook/sam2.1-hiera-tiny": "de431c4043854a71d8101e17995dfe596bf101a5",
+  "openai/whisper-small.en": "e8727524f962ee844a7319d92be39ac1bd25655a",
+  "sentence-transformers/all-MiniLM-L6-v2": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+ }
+}

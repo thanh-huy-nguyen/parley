@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use Parley or its evaluation kit, please cite the paper below."
+title: "Parley: a speech-directed segmentation mask editor and an evaluation kit for conversational editors"
+type: software
+version: 0.1.0
+license: Apache-2.0
+repository-code: "https://github.com/thanh-huy-nguyen/parley"
+authors:
+  - family-names: "Nguyen"
+    given-names: "Thanh-Huy"
+    affiliation: "Department of Radiology, Northwestern University"
+  - family-names: "Bagci"
+    given-names: "Ulas"
+    affiliation: "Department of Radiology, Northwestern University"
+preferred-citation:
+  type: article
+  title: "Parley: A Speech-Directed Segmentation Editor and Its Evaluation Across Separately Authored Simulators"
+  authors:
+    - family-names: "Nguyen"
+      given-names: "Thanh-Huy"
+    - family-names: "Bagci"
+      given-names: "Ulas"
+  journal: "Computer Methods and Programs in Biomedicine"
+  year: 2026
+  notes: "Under review"
