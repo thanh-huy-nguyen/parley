@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parley: A Speech-Directed Segmentation Editor</title>
+  <meta name="description" content="Parley reads a spoken correction as a program in the coordinates of the mask, and comes with a kit for testing conversational editors against simulated clinicians.">
+  <meta name="keywords" content="Parley, interactive segmentation, speech, simulated users, evaluation, medical imaging">
+  <meta property="og:title" content="Parley: A Speech-Directed Segmentation Editor and Its Evaluation Across Separately Authored Simulators">
+  <meta property="og:description" content="Talk a segmentation mask into shape, and measure how far the evidence depends on the simulator.">
+  <meta property="og:image" content="static/img/teaser.png">
+  <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<nav class="rail" aria-label="Sections">
+  <a href="#top" class="rail-brand">Parley</a>
+  <a href="#summary">Summary</a>
+  <a href="#demo">Demo</a>
+  <a href="#method">Method</a>
+  <a href="#design">Evaluation</a>
+  <a href="#findings">Findings</a>
+  <a href="#protocol">Protocol</a>
+  <a href="#limits">Limitations</a>
+  <a href="#bibtex">BibTeX</a>
+</nav>
+
+<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch between dark and light">
+  <i class="bi bi-sun"></i><span>Light</span>
+</button>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow">Computer Methods and Programs in Biomedicine &middot; Under Review</p>
+    <h1 class="wordmark">Parley</h1>
+    <p class="title">A Speech-Directed Segmentation Editor and Its Evaluation Across Separately Authored Simulators</p>
+    <p class="authors">
+      <span>Thanh-Huy Nguyen</span>
+      <span>Ulas Bagci<sup>&#8727;</sup></span>
+    </p>
+    <p class="affil">Department of Radiology, Northwestern University &middot; <sup>&#8727;</sup>Corresponding author</p>
+    <div class="links">
+      <a class="btn disabled" aria-disabled="true" title="The preprint link will appear here"><i class="bi bi-file-earmark-text"></i> Paper <small>soon</small></a>
+      <a class="btn" href="https://github.com/thanh-huy-nguyen/parley"><i class="bi bi-github"></i> Code</a>
+      <a class="btn-ghost" href="#demo"><i class="bi bi-play-circle"></i> Demo</a>
+      <a class="btn-ghost" href="#bibtex"><i class="bi bi-quote"></i> BibTeX</a>
+    </div>
+  </div>
+</header>
+
+<section class="band" id="summary">
+  <div class="wrap">
+    <blockquote class="tldr">
+      Parley reads a spoken correction as a short program on the mask in front of the clinician.
+      Frozen and moved to a simulator it was not built with, it gained much less, and a difficulty
+      control was enough to see it.
+    </blockquote>
+    <figure class="figure paper">
+      <img src="static/img/teaser.png" alt="Overview: a draft mask with two faults, Parley reading two spoken corrections into programs, the margin model sharpening over cases, and reach against hands-free editors on three groups of simulated clinicians">
+      <figcaption>Parley reads a spoken correction as an edit to the mask on screen and learns each clinician's margin.
+        Panels 1 to 3 are illustrations made from the ground truth. Panel 4 shows reach with 95% intervals on three
+        groups of simulated clinicians; these comparisons are post hoc.</figcaption>
+    </figure>
+
+    <div class="section-title"><p class="kicker">Abstract</p><h2>Why Measure the Simulator</h2></div>
+    <div class="prose">
+      <p>We know of no public recordings that pair clinical dictation with mask edits, so spoken segmentation editors
+        are built and tested on simulated clinicians. We present Parley, an inspectable speech-directed mask editor with
+        an evaluation kit, and measure how far its evidence depends on the simulator.</p>
+      <p>Parley reads each utterance as a program in mask coordinates, and a Bayesian margin model tracks each
+        clinician's preferred margin. One frozen editor was evaluated on breast ultrasound and colonoscopy with three
+        groups of simulated clinicians: our own simulator, separately written personas, and a separately authored
+        simulator with its own language, voices and test images. Two tests on the separately authored simulator were
+        fixed in advance; the other comparisons are post hoc, with two-way clustered intervals and a click model as a
+        difficulty control.</p>
+      <p>Mean gain in IoU fell from 0.140 on the own simulator to 0.026 on the separately authored one, a drop not seen
+        in the control, and neither pre-specified test favored Parley there. A frozen, inspectable editor and a second
+        simulator were enough to show how far simulated evidence for a conversational tool can be relied on. Our kit and
+        protocol let other groups run the same check.</p>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="section-title"><p class="kicker">Demo</p><h2>Every Turn Shows What Was Understood</h2>
+      <p>The local demo after three typed corrections on a validation image, then undo. Each turn prints the transcript,
+        the parsed program and the change, and the margin belief updates beside the image. Real model output, seed 0,
+        on a CPU.</p></div>
+    <figure class="figure dark-frame">
+      <img src="static/img/demo.gif" alt="The Parley demo: three corrections on a colonoscopy image, each with its parsed program, then undo" loading="lazy">
+    </figure>
+    <div class="stats">
+      <div class="stat"><span class="num">1.4 s</span><span class="label">Audio to mask, 8 CPU threads</span></div>
+      <div class="stat"><span class="num">147 ms</span><span class="label">Turn from a transcript, CPU</span></div>
+      <div class="stat"><span class="num">224 ms</span><span class="label">Audio to mask, GPU</span></div>
+      <div class="stat"><span class="num">7.6 M</span><span class="label">Trained parameters</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="method">
+  <div class="wrap">
+    <div class="section-title"><p class="kicker">Method</p><h2>Every Edit Is a Program in the Coordinates of the Mask</h2>
+      <p>"The top" is the arc of the boundary whose outward normal points up, "a little" is a fraction of the lesion's
+        equivalent diameter, and "pull in" is a signed change of the signed distance function on that arc.</p></div>
+    <figure class="figure paper">
+      <img src="static/img/method.png" alt="One turn of Parley: hear, read the edit, edit the mask, learn the margin" loading="lazy">
+      <figcaption>One turn. Frozen encoders carry a snowflake; learned parts are lilac. Two query slots each read one
+        edit into a program, the executor applies it, and the margin model updates. Masks are illustrations.</figcaption>
+    </figure>
+
+    <div class="cards">
+      <article class="card lilac">
+        <h3>Edit Programs</h3>
+        <p>An edit has a type, an anchor, a sign and an amount in units of the lesion's size. Shrink and grow move the
+          zero level set along the normal; add and remove use a predicted region, with one optional click to locate it.
+          Up to two edits per utterance.</p>
+      </article>
+      <article class="card gold">
+        <h3>A Margin Model</h3>
+        <p>Each correction carries a sign and a size, so it says where this clinician wants the boundary. A posterior
+          over the clinician's margin is updated exactly on a grid after every turn, with no gradient step, and starts
+          the next case at its mean.</p>
+      </article>
+      <article class="card teal">
+        <h3>An Evaluation Kit</h3>
+        <p><code>parley.evalkit</code> runs any editor through any simulated clinician and reports reach, gain, masks
+          improved and made worse, simulated time, and a two-way bootstrap over clinicians and images.</p>
+      </article>
+    </div>
+
+    <div class="explorer" id="explorer">
+      <div class="explorer-head">
+        <h3>Try the Edit Language</h3>
+        <p class="muted">Pick a sentence to see the program it is meant to produce. An illustration of the language, not
+          model output: the network does not always deliver the intended program, which is why the demo shows it.</p>
+      </div>
+      <div class="explorer-body">
+        <div class="phrases" role="tablist" aria-label="Example corrections">
+          <button class="phrase active" data-edit="shrink-top">"Pull the top in a little"</button>
+          <button class="phrase" data-edit="grow-all">"Too tight all round, open it up a lot"</button>
+          <button class="phrase" data-edit="shrink-left">"Bring the left side in a little"</button>
+          <button class="phrase" data-edit="move">"Shift it down and to the left"</button>
+          <button class="phrase" data-edit="add-bottom">"There's a piece missing at the bottom"</button>
+          <button class="phrase" data-edit="remove-click">"Get rid of that blob" + click</button>
+          <button class="phrase" data-edit="accept">"That looks good"</button>
+        </div>
+        <div class="explorer-view">
+          <svg viewBox="0 0 240 200" class="lesion" aria-hidden="true">
+            <defs>
+              <radialGradient id="tissue" cx="50%" cy="45%" r="70%">
+                <stop offset="0%" stop-color="#b8735f"/><stop offset="100%" stop-color="#5a2e2a"/>
+              </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="240" height="200" rx="10" fill="url(#tissue)"/>
+            <ellipse cx="118" cy="104" rx="58" ry="44" fill="#e7a283" opacity="0.55"/>
+            <path id="contour" d="M60,104 C60,70 90,56 120,58 C152,60 178,76 178,104 C178,134 150,150 118,150 C86,150 60,136 60,104 Z" fill="none" stroke="#f3ecdf" stroke-width="2.5" stroke-dasharray="6 4"/>
+            <path class="arc arc-top" d="M84,68 C100,58 140,56 158,68"/>
+            <path class="arc arc-bottom" d="M84,142 C100,152 140,152 158,142"/>
+            <path class="arc arc-left" d="M66,82 C58,96 58,114 66,128"/>
+            <path class="arc arc-right" d="M172,82 C180,96 180,114 172,128"/>
+            <path class="arc arc-all" d="M60,104 C60,70 90,56 120,58 C152,60 178,76 178,104 C178,134 150,150 118,150 C86,150 60,136 60,104 Z"/>
+            <circle class="blob blob-add" cx="128" cy="166" r="11"/>
+            <circle class="blob blob-remove" cx="42" cy="104" r="12"/>
+            <g class="cursor"><path d="M44,100 l0,16 l4,-4 l3,7 l3,-1.5 l-3,-7 l6,0 z" fill="#fff" stroke="#151016" stroke-width="1"/></g>
+            <g class="move-arrow"><path d="M118,104 l-26,22" stroke="#ddc08a" stroke-width="3" stroke-linecap="round"/><path d="M88,130 l2,-10 l8,7 z" fill="#ddc08a"/></g>
+          </svg>
+          <div class="program" id="program">
+            <span class="chip-prog">Shrink</span><span class="chip-prog">Top</span><span class="chip-prog">Small</span>
+          </div>
+          <p class="program-note" id="program-note">Moves the top arc inward by a small fraction of the lesion's diameter.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="design">
+  <div class="wrap">
+    <div class="section-title"><p class="kicker">Evaluation</p><h2>Three Groups of Simulated Clinicians</h2>
+      <p>One frozen editor, three groups: the simulator it was built with, personas written separately in the same
+        language, and a simulator written separately with its own language, voices and test images. Each group was
+        written in its own session; the separation is between sessions, not between research groups.</p></div>
+    <figure class="figure paper narrow">
+      <img src="static/img/design.png" alt="What changes between the three groups of simulated clinicians" loading="lazy">
+      <figcaption>Gold cells differ from the setting the editor was built with. The separate simulator changes all five
+        at once, so a difference from the own simulator has no single cause.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="band" id="findings">
+  <div class="wrap">
+    <div class="section-title"><p class="kicker">Findings</p><h2>What the Frozen Editor Showed</h2></div>
+
+    <h3 class="finding">In 2D, Parley reaches the target more often than hands-free editors, by less on the separate simulator</h3>
+    <div class="results" id="results">
+      <div class="tabs" role="tablist" aria-label="Simulated clinicians">
+        <button class="tab active" data-sim="own" role="tab">Own Simulator</button>
+        <button class="tab" data-sim="personas" role="tab">New Personas</button>
+        <button class="tab" data-sim="separate" role="tab">Separate Simulator</button>
+      </div>
+      <div class="bars" id="bars" aria-live="polite"></div>
+      <p class="muted small" id="bars-note"></p>
+    </div>
+    <p class="prose">Reach is the share of dialogues needing correction that get within IoU 0.85 of the clinician's
+      target in 10 turns; the hands-free editors receive the same speech, with clicks where they take them. The lead is
+      about twofold on the own simulator and about fourfold on the new personas. On the separately authored simulator
+      the 95% interval of the lead over the strongest editor includes zero. These comparisons are post hoc.</p>
+
+    <h3 class="finding">The gain falls sharply on a separately authored simulator</h3>
+    <div class="gain">
+      <div class="gain-row"><span class="gain-label">Own simulator</span><span class="gain-bar"><i style="width:91%"></i></span><span class="gain-val">+0.140</span></div>
+      <div class="gain-row"><span class="gain-label">New personas</span><span class="gain-bar"><i style="width:100%"></i></span><span class="gain-val">+0.154</span></div>
+      <div class="gain-row"><span class="gain-label">Separate simulator</span><span class="gain-bar fall"><i style="width:17%"></i></span><span class="gain-val">+0.026</span></div>
+    </div>
+    <p class="prose">Mean gain in IoU from the start mask, Parley with speech and click. The change from the own
+      simulator is &minus;0.115 (95% CI &minus;0.171 to &minus;0.059). SAM 2 under exact clicks does not lose gain over
+      the same step, and the difference in differences excludes zero in every matched margin range, so a harder
+      simulator does not explain the drop. Personas in the familiar phrasing lost no gain: a second persona set in the
+      same language can look like a replication while testing little.</p>
+
+    <h3 class="finding">The margin model trades time between clinicians</h3>
+    <div class="split">
+      <figure class="figure paper">
+        <img src="static/img/crossover.png" alt="Change in later-case time with the margin model, by margin group and by whether the start mask needed correction" loading="lazy">
+      </figure>
+      <p class="prose">In exploratory analysis on the separate simulator, the margin model is faster for clinicians whose
+        margins are beyond typical and slower by about the same number of seconds for typical ones, so the overall
+        difference is near zero. The cost comes mainly from the start offset, which moves already acceptable masks out
+        of acceptance. Per-clinician adaptation should be judged by who pays for it.</p>
+    </div>
+
+    <h3 class="finding">In volumes, a shared propagation step decides the outcome</h3>
+    <div class="split">
+      <figure class="figure paper">
+        <img src="static/img/volumes.png" alt="Speech editors in volumes on Heart MRI, SegThy ultrasound and Spleen CT, as designed and slice-only" loading="lazy">
+      </figure>
+      <p class="prose">In a post hoc extension to three volumetric datasets, every speech editor lowered volume IoU when
+        each edit was carried through the volume by SAM 2 propagation, and a reasoning segmenter lost least. An editor
+        that makes perfect edits showed that on Heart the propagation step itself lowers overlap, so there the
+        comparison measures the propagator, not the editors.</p>
+    </div>
+
+    <h3 class="finding">When it works, the edits follow the target closely</h3>
+    <figure class="figure paper">
+      <img src="static/img/cases.png" alt="Outputs on the separate simulator at the 75th, 90th and 95th percentile of gain" loading="lazy">
+      <figcaption>Upper-percentile cases on the separate simulator (75th, 90th and 95th percentile of gain, chosen by a
+        rule fixed in code before any mask was viewed). They are not typical: about half of the dialogues that need
+        correction end above their start.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="protocol">
+  <div class="wrap">
+    <div class="section-title"><p class="kicker">Protocol</p><h2>Five Steps for Testing a Conversational Editor</h2>
+      <p>Proposed from this one case. The kit provides the runner, the outcomes and the clustered intervals.</p></div>
+    <ol class="steps">
+      <li><span class="n">1</span><div><h4>Test on a Simulator the Editor Was Not Built Around</h4><p>With its own language, and report who wrote it and what they could read.</p></div></li>
+      <li><span class="n">2</span><div><h4>Fix the Test in Advance</h4><p>Slice, endpoints and tests, then run it once.</p></div></li>
+      <li><span class="n">3</span><div><h4>Add Controls</h4><p>An arm that uses no language, to show how much harder the new simulator is, and a perfect editor wherever all editors share a step.</p></div></li>
+      <li><span class="n">4</span><div><h4>Report by Clinician Type</h4><p>An average can hide a trade: here two groups moved in opposite directions.</p></div></li>
+      <li><span class="n">5</span><div><h4>Cluster the Intervals</h4><p>By simulated clinician and by image, since dialogues that share either are not independent.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" id="limits">
+  <div class="wrap">
+    <div class="section-title"><p class="kicker">Limitations</p><h2>What This Does Not Show</h2></div>
+    <div class="prose">
+      <p>Every clinician in the evaluation is simulated and every utterance is synthesized, so the results describe
+        behavior under these simulators, not clinical use. Two physicians have tried the demo with a live microphone,
+        but there was no clinical study. On the separate simulator, SAM 2 given the simulator's clicks reached the target
+        more often than Parley, and a cached click is much faster than a spoken turn; speech is meant for moments when
+        the hands are busy, which this study did not test. All simulators came from separate sessions of one AI coding
+        assistant under the same investigators. Parley is a research prototype and not a medical device.</p>
+    </div>
+  </div>
+</section>
+
+<section id="bibtex">
+  <div class="wrap">
+    <div class="section-title"><p class="kicker">Citation</p><h2>BibTeX</h2></div>
+    <div class="bib">
+      <button class="copy" id="copy-bib" type="button"><i class="bi bi-clipboard"></i> Copy</button>
+<pre id="bib-text">@article{nguyen2026parley,
+  title   = {Parley: A Speech-Directed Segmentation Editor and Its Evaluation
+             Across Separately Authored Simulators},
+  author  = {Nguyen, Thanh-Huy and Bagci, Ulas},
+  journal = {Computer Methods and Programs in Biomedicine},
+  year    = {2026},
+  note    = {Under review}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <span class="fleuron">&#10086;</span>
+    <p>Department of Radiology, Northwestern University. The layout follows the Nerfies academic project page; colors and
+      type follow <a href="https://huy-northwestern.vercel.app/">huy-northwestern.vercel.app</a>.</p>
+  </div>
+</footer>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>
