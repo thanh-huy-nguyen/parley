@@ -6,6 +6,7 @@
 </p>
 
 <p align="center">
+  <a href="https://thanh-huy-nguyen.github.io/parley/"><img alt="Project page" src="https://img.shields.io/badge/Project-Page-C7A6D9?style=flat-square"></a>
   <a href="#citation"><img alt="Paper" src="https://img.shields.io/badge/Paper-Under%20Review-5A2F5A?style=flat-square"></a>
   <a href="#installation"><img alt="Python 3.11" src="https://img.shields.io/badge/Python-3.11-3D1F38?style=flat-square"></a>
   <a href="LICENSE"><img alt="Code license" src="https://img.shields.io/badge/Code-Apache%202.0-765314?style=flat-square"></a>
@@ -17,7 +18,8 @@
 <p align="center">
   <b>Parley: A Speech-Directed Segmentation Editor and Its Evaluation Across Separately Authored Simulators</b><br>
   Thanh-Huy Nguyen, Ulas Bagci<br>
-  Department of Radiology, Northwestern University
+  Department of Radiology, Northwestern University<br>
+  <a href="https://thanh-huy-nguyen.github.io/parley/">Project page</a>
 </p>
 
 Parley edits a 2D segmentation mask from a spoken or typed correction. You give it an image, the current mask and a
